@@ -203,7 +203,7 @@ void Dynamic_minds_course_objective_setting_update() {
     }
 
     int courseId;
-    printf("Enter the course ID to update: ");
+    printf("Enter the  ID to update: ");
     if (scanf("%d", &courseId) != 1) {
         Dynamic_minds_course_objective_setting_clearInputBuffer();
         printf("Invalid input. Course ID should be an integer.\n");
@@ -216,7 +216,7 @@ void Dynamic_minds_course_objective_setting_update() {
         if (courses[i].id == courseId) {
             found = true;
 
-            printf("Enter new course code: ");
+            printf("Enter new course id: ");
             fgets(courses[i].cour_id, MAX_COURSE_ID, stdin);
             strtok(courses[i].cour_id, "\n");
 
