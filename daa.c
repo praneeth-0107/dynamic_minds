@@ -1,4 +1,4 @@
-    #include <stdio.h>
+  #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
@@ -40,6 +40,8 @@ void Dynamic_minds_course_objective_setting_Compare_Sort_Algorithms();
 void Dynamic_minds_course_objective_setting_displaysortPseudocode();
 void Dynamic_minds_course_objective_setting_complexity_sorting();
 void Dynamic_minds_course_objective_setting_complexity_searching();
+void Dynamic_minds_course_objective_setting_searchCoursesByField();
+void Dynamic_minds_course_objective_setting_sortCoursesByField();
 
 int main() {
     int choice;
@@ -56,16 +58,15 @@ int count=0;
         printf("2. Retrieve Courses\n");
         printf("3. Update Course\n");
         printf("4. Delete Course\n");
-        printf("5. Search Course by Objective Code\n");
-        printf("6. List Courses by Objective No\n");
-        printf("7. Sort Courses by ID\n");
-        printf("8. Compare Searching Algorithms\n");
-        printf("9. Compare Sorting Algorithms\n");
-        printf("10. Display Searching Algorithm Pseudocode\n");
-        printf("11. Display Sorting Algorithm Pseudocode\n");
-        printf("12. Display Searching  Algorithm  Complexities\n");
-        printf("13. Display Sorting Algorithm  Complexities\n");
-        printf("14. Exit\n");
+        printf("5. Search Course by field\n");
+        printf("6. Sort Courses by field\n");
+        printf("7. Compare Searching Algorithms\n");
+        printf("8. Compare Sorting Algorithms\n");
+        printf("9. Display Searching Algorithm Pseudocode\n");
+        printf("10. Display Sorting Algorithm Pseudocode\n");
+        printf("11. Display Searching  Algorithm  Complexities\n");
+        printf("12. Display Sorting Algorithm  Complexities\n");
+        printf("13. Exit\n");
         printf("Enter your choice: ");
         if (scanf("%d", &choice) != 1) {
             Dynamic_minds_course_objective_setting_clearInputBuffer();
@@ -79,19 +80,18 @@ int count=0;
             case 2: Dynamic_minds_course_objective_setting_retrieve(); break;
             case 3: Dynamic_minds_course_objective_setting_update(); break;
             case 4: Dynamic_minds_course_objective_setting_delete(); break;
-            case 5: Dynamic_minds_course_objective_setting_searchCourseByCode(); break;
-            case 6: Dynamic_minds_course_objective_setting_listCoursesByObjectiveNo(); break;
-            case 7: Dynamic_minds_course_objective_setting_sortCoursesById(); break;
-            case 8: Dynamic_minds_course_objective_setting_Compare_Search_Algorithms(); break;
-            case 9: Dynamic_minds_course_objective_setting_Compare_Sort_Algorithms(); break;
-            case 10: Dynamic_minds_course_objective_setting_displaysearchPseudocode(); break;
-case 11: Dynamic_minds_course_objective_setting_displaysortPseudocode(); break;
-            case 12: Dynamic_minds_course_objective_setting_complexity_searching(); break;
- case 13: Dynamic_minds_course_objective_setting_complexity_sorting(); break;
-            case 14: printf("Exiting program.\n"); break;
+            case 5: Dynamic_minds_course_objective_setting_searchCoursesByField();break;
+            case 6: Dynamic_minds_course_objective_setting_sortCoursesByField();break;
+            case 7: Dynamic_minds_course_objective_setting_Compare_Search_Algorithms(); break;
+            case 8: Dynamic_minds_course_objective_setting_Compare_Sort_Algorithms(); break;
+            case 9: Dynamic_minds_course_objective_setting_displaysearchPseudocode(); break;
+case 10: Dynamic_minds_course_objective_setting_displaysortPseudocode(); break;
+            case 11: Dynamic_minds_course_objective_setting_complexity_searching(); break;
+ case 12: Dynamic_minds_course_objective_setting_complexity_sorting(); break;
+            case 13: printf("Exiting program.\n"); break;
             default: printf("Invalid choice. Please try again.\n");
         }
-    } while (choice != 14);
+    } while (choice != 13);
 
     return 0;
 }
@@ -203,7 +203,7 @@ void Dynamic_minds_course_objective_setting_update() {
     }
 
     int courseId;
-    printf("Enter the  ID to update: ");
+    printf("Enter the course ID to update: ");
     if (scanf("%d", &courseId) != 1) {
         Dynamic_minds_course_objective_setting_clearInputBuffer();
         printf("Invalid input. Course ID should be an integer.\n");
@@ -216,7 +216,7 @@ void Dynamic_minds_course_objective_setting_update() {
         if (courses[i].id == courseId) {
             found = true;
 
-            printf("Enter new course id: ");
+            printf("Enter new course code: ");
             fgets(courses[i].cour_id, MAX_COURSE_ID, stdin);
             strtok(courses[i].cour_id, "\n");
 
@@ -449,3 +449,100 @@ void Dynamic_minds_course_objective_setting_complexity_searching() {
 }
 
  
+// Sorting function based on selected field
+ 
+void Dynamic_minds_course_objective_setting_searchCoursesByField() {
+    Course courses[MAX_COURSES];
+    int count = 0;
+
+    // Load courses from file
+    if (!Dynamic_minds_course_objective_setting_loadFromFile(courses, &count)) {
+        printf("No courses found.\n");
+        return;
+    }
+
+    int choice;
+    char searchTerm[MAX_COURSE_NAME];
+    printf("Select field to search by:\n");
+    printf("1. Course ID\n2. Name\n3. Objective Code\n4. Objective Number\n5. Objective Details\n");
+    if (scanf("%d", &choice) != 1) {
+        Dynamic_minds_course_objective_setting_clearInputBuffer();
+        printf("Invalid input.\n");
+        return;
+    }
+    Dynamic_minds_course_objective_setting_clearInputBuffer();
+    printf("Enter search term: ");
+    fgets(searchTerm, MAX_COURSE_NAME, stdin);
+    strtok(searchTerm, "\n");
+
+    bool found = false;
+    Dynamic_minds_course_objective_setting_printCourseHeader();
+    for (int i = 0; i < count; i++) {
+        bool match = false;
+        switch (choice) {
+            case 1: match = (courses[i].id == atoi(searchTerm)); break;
+            case 2: match = (strcmp(courses[i].name, searchTerm) == 0); break;
+            case 3: match = (strcmp(courses[i].cour_obj_code, searchTerm) == 0); break;
+            case 4: match = (strcmp(courses[i].cour_obj_no, searchTerm) == 0); break;
+            case 5: match = (strcmp(courses[i].cour_obj_details, searchTerm) == 0); break;
+            default:
+                printf("Invalid choice.\n");
+                return;
+        }
+        if (match) {
+            Dynamic_minds_course_objective_setting_printCourse(&courses[i]);
+            found = true;
+        }
+    }
+    if (!found) printf("No courses found.\n");
+}
+
+// Implement the rest of your helper functions here
+void Dynamic_minds_course_objective_setting_sortCoursesByField() {
+    Course courses[MAX_COURSES];
+    int count = 0;
+
+    // Load courses from file
+    if (!Dynamic_minds_course_objective_setting_loadFromFile(courses, &count)) {
+        printf("No courses found.\n");
+        return;
+    }
+
+    int choice;
+    printf("Select field to sort by:\n");
+    printf("1. Course ID\n2. Name\n3. Objective Code\n4. Objective Number\n5. Objective Details\n");
+    if (scanf("%d", &choice) != 1) {
+        Dynamic_minds_course_objective_setting_clearInputBuffer();
+        printf("Invalid input.\n");
+        return;
+    }
+    Dynamic_minds_course_objective_setting_clearInputBuffer();
+
+    // Perform bubble sort based on the selected field
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - i - 1; j++) {
+            bool swap = false;
+            switch (choice) {
+                case 1: swap = (courses[j].id > courses[j + 1].id); break;
+                case 2: swap = (strcmp(courses[j].name, courses[j + 1].name) > 0); break;
+                case 3: swap = (strcmp(courses[j].cour_obj_code, courses[j + 1].cour_obj_code) > 0); break;
+                case 4: swap = (strcmp(courses[j].cour_obj_no, courses[j + 1].cour_obj_no) > 0); break;
+                case 5: swap = (strcmp(courses[j].cour_obj_details, courses[j + 1].cour_obj_details) > 0); break;
+                default:
+                    printf("Invalid choice.\n");
+                    return;
+            }
+            if (swap) {
+                Course temp = courses[j];
+                courses[j] = courses[j + 1];
+                courses[j + 1] = temp;
+            }
+        }
+    }
+
+    printf("Courses sorted successfully.\n");
+    Dynamic_minds_course_objective_setting_printCourseHeader();
+    for (int i = 0; i < count; i++) {
+        Dynamic_minds_course_objective_setting_printCourse(&courses[i]);
+    }
+}
